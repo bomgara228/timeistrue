@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            
+        }
+        body {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+        }
+        .lefts {
+            width: 50vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-size: 20vw; 
+        }
+        .rights {
+            width: 50vw;
+            border-left: 1vw solid rgb(11, 13, 30);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .upscore {
+            background-color: rgba(124, 225, 65, 0.6);
+            border: 0.4vw solid rgb(11, 13, 30);
+            border-left: 0;
+            width: 100%;
+            height: 10%;
+            font-size: 4vw ;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        }
+        .scoreup {
+            background-color: rgba(124, 225, 65, 0.6);
+            border: 0.4vw solid rgb(11, 13, 30);
+            border-right: 0;
+            width: 100%;
+            height: 10%;
+            font-size: 4vw ;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        }
+        .upgrades {
+            width: 100%;
+            height: 90%;
+        }
+        .powerUp {
+            width: 100%;
+            height: 10vw;
+            border: 0.4vw solid  rgb(11, 13, 30);
+            border-left: 0;
+            border-top: 0;
+            display: flex;
+            text-align: center;
+            align-items: center;
+            justify-content: space-between;
+            flex-direction: row;
+            
+            padding: 0 0.5vw 0 1.5vw;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        }
+        .cen {
+            width: 100%;
+            height: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .awards {
+            width: 9vw;
+            height: 8%;
+            font-size: 1vw;
+            border: 0.2vw solid black;
+            border-radius: 25%;
+            background-color: darkred;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0.4vw 0.4vw 0.7vw black;
+            align-self: flex-start;
+            margin: 0 0 1vw 1vw;
+        }
+        .mom {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+        .card-img-top {
+            width: 8vw;
+            height: 6vw;
+            
+        }
+        button {
+            border-radius:20%;
+            color: white;
+            background-color: black;
+            margin: 8vw 0 0 0;
+        }
+        .green {
+            background-color: green;
+        }
+        .red {
+            background-color: red;
+        }
+        .cn {
+            flex-direction: column;
+            width: 10vw;
+        }
+    </style>
+</head>
+<body>
+    <div class="lefts">
+        <div class="scoreup"></div>
+        <div class="cen"><img src="smile.png" style="object-fit:contain; width: 20vw;"></div>
+        <div class="awards"><h2>Достижения</h2></div>
+    </div>
+    <div class="rights">
+        <div class="upscore"></div>
+        <div class="upgrades"></div>    
+    </div>
+
+    <script>
+        let misst = 0;
+        let missd = 0;
+        if (localStorage.getItem('days') !== undefined) {
+            missd = localStorage.getItem('days');
+        }
+        if (localStorage.getItem('time') !== undefined) {
+            misst = parseInt(localStorage.getItem('time'));
+        }
+        
+        let time;
+        let akey = '7a879ae248f24d79926ba69a6536e6fb';
+        let url = `https://api.ipgeolocation.io/timezone?apiKey=${akey}&tz=Europe/Minsk`;
+        
+        let timeAn;
+        let timeDay;
+
+        fetch(url)
+        .then(respons => {
+            return respons.json()
+        })
+        .then (function(data){
+            console.log(data);
+            time = data.time_24;
+            days = data.date_time_ymd.slice(0, 10) ;
+            transfomTime();
+            transfomDays();
+            localStorage.setItem('days', timeDay);
+            localStorage.setItem('time', timeAn);
+        });
+
+        function transfomTime(){
+            for (let i = 0; i < time.length; i++) {
+            if (time.charAt(i) != ':'){
+                arrt.push(time.charAt(i));
+                }
+            }
+            timeAn = parseInt(arrt.join(''));
+            arrt = [];
+        }
+        
+        function transfomDays(){
+            for (let i = 0; i < days.length; i++) {
+            if (days.charAt(i) != '-'){
+                arrt.push(days.charAt(i));
+                }
+            }
+            timeDay = arrt.join('');
+            arrt = [];
+        }
+
+        setInterval(() => {
+            fetch(url)
+            .then(respons => {
+                return respons.json()
+            })
+            .then (function(data){
+            console.log(data);
+            time = data.time_24;
+            transfomTime();
+            transfomDays();
+            console.log(typeof timeDay)
+            localStorage.setItem('days', timeDay);
+            localStorage.setItem('time', timeAn);
+            console.log(timeAn);
+            });
+
+        }, 9000);   
+
+        //СЕЙВИ ↑
+       
+        let upgcent = document.querySelector('.upgrades');
+        let but = document.querySelector('img');
+        let rich = document.querySelector('.upscore');
+
+        let mon = 0;
+        if (localStorage.getItem('deng') != 0) {
+            mon = parseInt(localStorage.getItem('deng'));
+        } 
+
+        let upg = 1;
+        let ges = 1;
+        let persec = 2;
+        let arrt = [];
+
+        //расчет того сколько вас не было
+        let amou = 0;
+        let aod = 0;
+        let fined = 0;
+        setTimeout(() => {
+            //пропущенные дни
+            if (missd != 0){
+                let mont = parseInt(missd.slice(4, 6));
+                let montn = parseInt(timeDay.slice(4, 6));
+                let missed = parseInt(missd.slice(6,8));
+                let nowed = parseInt(timeDay.slice(6,8));
+                console.log(missed);
+                console.log(nowed);
+                if (montn - mont != 0){
+                    let b = montn;
+                    for (let i = mont; i < b; i++){
+                        switch(i){
+                    case 1: 
+                        amou = 31;
+                        break;
+                    case 2:  
+                        amou = 28;
+                        break;
+                    case 3:  
+                        amou = 31;
+                        break;
+                    case 4:  
+                        amou = 30;
+                        break;
+                    case 5:  
+                        amou = 31;
+                        break;
+                    case 6:  
+                        amou = 30;
+                        break;
+                    case 7:  
+                        amou = 31;
+                        break;
+                    case 8:  
+                        amou = 31;
+                        break;
+                    case 9:  
+                        amou = 30;
+                        break;
+                    case 10:  
+                        amou = 31;
+                        break;
+                    case 11:  
+                        amou = 30;
+                        break;
+                    case 12:  
+                        amou = 31;
+                        break;
+                    
+                }
+                    aod += amou;
+                    }
+                    switch(mont){
+                    case 1: 
+                        amou = 31;
+                        break;
+                    case 2:  
+                        amou = 28;
+                        break;
+                    case 3:  
+                        amou = 31;
+                        break;
+                    case 4:  
+                        amou = 30;
+                        break;
+                    case 5:  
+                        amou = 31;
+                        break;
+                    case 6:  
+                        amou = 30;
+                        break;
+                    case 7:  
+                        amou = 31;
+                        break;
+                    case 8:  
+                        amou = 31;
+                        break;
+                    case 9:  
+                        amou = 30;
+                        break;
+                    case 10:  
+                        amou = 31;
+                        break;
+                    case 11:  
+                        amou = 30;
+                        break;
+                    case 12:  
+                        amou = 31;
+                        break;
+                    
+                }
+                    fined = aod - missed + nowed;
+            } else {
+                    fined = nowed - missed; 
+                }
+                console.log(fined);
+            }
+            missedt = fined * 24 * 60 *60;
+            if (misst != 0) {
+                misst =  timeAn - misst + missedt;
+                console.log(misst);
+                mon += persec * misst;
+                rich.innerText = mon;
+            }
+        }, 1500); 
+
+        // клик
+        but.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            mon += ges * upg;   
+            rich.innerText = mon; 
+            
+        })
+
+        // Денег в секунду
+        setInterval(() => {
+            mon += persec;
+            rich.innerText = mon;
+            localStorage.setItem('deng', mon);
+        }, 1000);
+
+        const allupg = [
+            {
+                nameupg: "Свинка",
+                desc: "Купите помошника свинку для прокачки клика",
+                clickupg:1,
+                persec:0,
+                mnoz:0,
+                imageupg: "pig.jpg"
+            },
+            
+            {
+                nameupg: "Mushrooms",
+                desc: "Природа помогает вам собрать больше денег в секунду",
+                clickupg:0,
+                persec:1,
+                mnoz:0,
+                imageupg: "thebelka.jpg"
+            },
+
+            {
+                nameupg: "Модная шляпа",
+                desc: "Увеличивает множитель клика за счет красоты",
+                clickupg:0,
+                persec:0,
+                mnoz:0.2,
+                imageupg: "hat.png"
+            }
+        ]
+        function cutih(arr){
+            for (item of arr) {
+                let div = document.createElement('div');
+                let diiv = document.createElement('div');
+                div.classList.add('powerUp');
+                let h2 = document.createElement('h2');
+                let p = document.createElement('p');
+                let img = document.createElement('img');
+                let but = document.createElement('button');
+                img.classList.add('card-img-top')
+
+                h2.innerHTML = item.nameupg;
+                p.innerHTML = item.desc;
+                but.innerHTML = "Купить";
+                img.src = item.imageupg;
+                diiv.classList.add('cn')
+
+                upgcent.append(div);
+                div.append(diiv);
+                diiv.append(h2);
+                diiv.append(p);
+                div.append(but);
+                div.append(img);
+
+
+            }
+        }
+        cutih(allupg);
+    </script>
+</body>
+</html>
